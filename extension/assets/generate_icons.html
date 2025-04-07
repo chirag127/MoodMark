@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Icons</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>MoodMark Icon Generator</h1>
+    <div id="canvasContainer"></div>
+    <script>
+        // Sizes for the icons
+        const sizes = [16, 48, 128];
+        
+        // Function to generate and download an icon
+        function generateIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#4285f4'; // Google blue
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw a simple mood symbol (smiley face)
+            ctx.fillStyle = '#ffffff';
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = size * 0.4;
+            
+            // Circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            // Eyes
+            const eyeRadius = size * 0.05;
+            const eyeOffsetX = size * 0.15;
+            const eyeOffsetY = size * 0.1;
+            
+            ctx.beginPath();
+            ctx.arc(centerX - eyeOffsetX, centerY - eyeOffsetY, eyeRadius, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(centerX + eyeOffsetX, centerY - eyeOffsetY, eyeRadius, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Smile
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * 0.7, 0.2 * Math.PI, 0.8 * Math.PI);
+            ctx.lineWidth = size * 0.05;
+            ctx.strokeStyle = '#ffffff';
+            ctx.stroke();
+            
+            // Add to page
+            document.getElementById('canvasContainer').appendChild(canvas);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.download = `icon${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.textContent = `Download ${size}x${size} icon`;
+            link.style.display = 'block';
+            document.getElementById('canvasContainer').appendChild(link);
+        }
+        
+        // Generate icons for all sizes
+        sizes.forEach(size => generateIcon(size));
+    </script>
+</body>
+</html>

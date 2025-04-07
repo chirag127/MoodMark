@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoodMark</title>
+  <link rel="stylesheet" href="popup.css">
+  <!-- Chart.js for visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>MoodMark</h1>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="current">Current Mood</button>
+        <button class="tab-btn" data-tab="history">History</button>
+        <button class="tab-btn" data-tab="settings">Settings</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Dashboard Tab -->
+      <section id="dashboard" class="tab-content active">
+        <div class="mood-summary">
+          <h2>Your Mood Summary</h2>
+          <div class="current-mood">
+            <div class="mood-icon" id="currentMoodIcon">😐</div>
+            <div class="mood-label" id="currentMoodLabel">Neutral</div>
+          </div>
+
+          <div class="mood-stats">
+            <div class="stat">
+              <span class="stat-label">Today's Dominant Mood</span>
+              <span class="stat-value" id="todayDominantMood">Neutral</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Weekly Trend</span>
+              <span class="stat-value" id="weeklyTrend">Stable</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <h3>Mood Over Time</h3>
+          <canvas id="moodTimeChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+          <h3>Top Emotional Triggers</h3>
+          <canvas id="triggerChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Current Mood Tab -->
+      <section id="current" class="tab-content">
+        <h2>Current Mood</h2>
+
+        <div class="current-page-mood">
+          <h3>This Page</h3>
+          <div class="page-info">
+            <div class="page-title" id="currentPageTitle">Loading...</div>
+            <div class="page-url" id="currentPageUrl">Loading...</div>
+          </div>
+
+          <div class="mood-indicator">
+            <div class="mood-icon large" id="pageMoodIcon">😐</div>
+            <div class="mood-label" id="pageMoodLabel">Neutral</div>
+          </div>
+
+          <div class="mood-factors">
+            <h4>Contributing Factors</h4>
+            <ul id="moodFactorsList">
+              <li class="factor">Loading factors...</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="manual-mood">
+          <h3>How are you feeling?</h3>
+          <div class="mood-selector">
+            <button class="mood-btn" data-mood="happy">😊 Happy</button>
+            <button class="mood-btn" data-mood="sad">😢 Sad</button>
+            <button class="mood-btn" data-mood="angry">😠 Angry</button>
+            <button class="mood-btn" data-mood="anxious">😰 Anxious</button>
+            <button class="mood-btn" data-mood="calm">😌 Calm</button>
+            <button class="mood-btn" data-mood="neutral">😐 Neutral</button>
+          </div>
+          <div class="mood-note">
+            <textarea id="moodNote" placeholder="Add a note about your mood (optional)"></textarea>
+            <button id="saveMoodBtn">Save Mood</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Tab -->
+      <section id="history" class="tab-content">
+        <h2>Mood History</h2>
+
+        <div class="history-filters">
+          <div class="filter-group">
+            <label for="historyRange">Time Range:</label>
+            <select id="historyRange">
+              <option value="day">Today</option>
+              <option value="week" selected>Past Week</option>
+              <option value="month">Past Month</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="historyDomain">Website:</label>
+            <select id="historyDomain">
+              <option value="all" selected>All Websites</option>
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="historyChart"></canvas>
+        </div>
+
+        <div class="mood-entries">
+          <h3>Mood Entries</h3>
+          <div class="entries-list" id="entriesList">
+            <!-- Dynamically populated -->
+            <div class="entry-placeholder">Loading entries...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section id="settings" class="tab-content">
+        <h2>Settings</h2>
+
+        <div class="settings-group">
+          <h3>Tracking Options</h3>
+
+          <div class="setting">
+            <label for="trackSentiment">
+              <input type="checkbox" id="trackSentiment" checked>
+              Track Text Sentiment
+            </label>
+            <p class="setting-description">Analyze the emotional content of your text inputs</p>
+          </div>
+
+          <div class="setting">
+            <label for="trackTypingBehavior">
+              <input type="checkbox" id="trackTypingBehavior" checked>
+              Track Typing Behavior
+            </label>
+            <p class="setting-description">Monitor typing patterns to infer emotional state</p>
+          </div>
+
+          <div class="setting">
+            <label for="trackURLContext">
+              <input type="checkbox" id="trackURLContext" checked>
+              Track URL Context
+            </label>
+            <p class="setting-description">Record websites visited with mood data</p>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3>Privacy</h3>
+
+          <div class="setting">
+            <label for="privacyMode">Data Storage:</label>
+            <select id="privacyMode">
+              <option value="local" selected>Local Only</option>
+              <option value="server">Use Server (Better Analysis)</option>
+            </select>
+            <p class="setting-description">Choose where your mood data is processed and stored</p>
+          </div>
+
+          <div class="setting">
+            <label for="dataRetentionDays">Data Retention:</label>
+            <select id="dataRetentionDays">
+              <option value="7">7 Days</option>
+              <option value="30" selected>30 Days</option>
+              <option value="90">90 Days</option>
+              <option value="365">1 Year</option>
+            </select>
+            <p class="setting-description">How long to keep your mood data</p>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3>Data Management</h3>
+
+          <div class="data-actions">
+            <button id="exportDataBtn">Export Data</button>
+            <button id="importDataBtn">Import Data</button>
+            <button id="clearDataBtn" class="danger">Clear All Data</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>MoodMark v1.0.0 | <a href="#" id="aboutLink">About</a></p>
+    </footer>
+  </div>
+
+  <!-- About Modal -->
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>About MoodMark</h2>
+      <p>MoodMark is a browser extension that passively tracks and visualizes your emotional state while browsing the
+        web.</p>
+      <p>It uses contextual data like browsing activity, typing behavior, and sentiment analysis of text inputs to
+        generate an emotional map of your browsing journey.</p>
+      <h3>Privacy</h3>
+      <p>Your data is stored locally on your device by default. You can choose to enable server-side processing for
+        better analysis, but your data is never shared with third parties.</p>
+      <h3>Features</h3>
+      <ul>
+        <li>Sentiment Tracking: Analyze your text for emotional content</li>
+        <li>Typing Behavior Monitor: Track typing patterns to infer mood</li>
+        <li>URL Context: Log visited URLs with mood snapshots</li>
+        <li>Mood Dashboard: Visualize your emotional trends</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+  <script src="popup-settings.js"></script>
+</body>
+
+</html>
