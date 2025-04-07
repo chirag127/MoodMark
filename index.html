@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodMark - Emotional Web Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Color Variables */
+            --primary-color: #4285F4;
+            --primary-dark: #3367D6;
+            --secondary-color: #34A853;
+            --accent-color: #FBBC05;
+            --danger-color: #EA4335;
+            --bg-dark: #121212;
+            --bg-card: #1E1E1E;
+            --text-light: #FFFFFF;
+            --text-muted: #AAAAAA;
+            --border-color: #333333;
+            
+            /* Mood Colors */
+            --mood-happy: #34A853;
+            --mood-sad: #4285F4;
+            --mood-angry: #EA4335;
+            --mood-anxious: #FBBC05;
+            --mood-calm: #9C27B0;
+            --mood-neutral: #9E9E9E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            padding: 2rem 0;
+            background-color: rgba(18, 18, 18, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            background-color: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: var(--text-muted);
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .hero-image {
+            margin-top: 3rem;
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+        }
+
+        /* About Section */
+        .section {
+            padding: 4rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-muted);
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+        }
+
+        /* Installation Section */
+        .installation-steps {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: var(--text-muted);
+        }
+
+        .step-content code {
+            display: block;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            font-family: monospace;
+            color: var(--accent-color);
+        }
+
+        /* How to Use Section */
+        .usage-container {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .usage-list {
+            list-style-position: inside;
+            margin-left: 1rem;
+        }
+
+        .usage-list li {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .usage-list li strong {
+            color: var(--text-light);
+        }
+
+        /* Tech Stack Section */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .tech-item {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            width: 120px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .tech-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .tech-item p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--bg-card);
+            padding: 3rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-logo img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="extension/assets/icon48.png" alt="MoodMark Logo">
+                    <div class="logo-text">
+                        <h1>MoodMark</h1>
+                        <p>Emotional Web Journal</p>
+                    </div>
+                </div>
+                <div class="header-buttons">
+                    <a href="https://github.com/chirag127/MoodMark" target="_blank" class="btn btn-outline">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="privacy-policy.html" target="_blank" class="btn btn-primary">
+                        <i class="fas fa-shield-alt"></i> Privacy Policy
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2 class="animate">Track Your Emotional Journey Across the Web</h2>
+            <p class="animate delay-1">
+                MoodMark is a browser extension that passively tracks and visualizes your emotional state while browsing the web. 
+                It uses contextual data like browsing activity, typing behavior, and sentiment analysis to create an emotional map of your online experience.
+            </p>
+            <div class="hero-buttons animate delay-2">
+                <a href="https://github.com/chirag127/MoodMark" target="_blank" class="btn btn-primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#installation" class="btn btn-outline">
+                    <i class="fas fa-download"></i> Installation Guide
+                </a>
+            </div>
+            <img src="extension/assets/dashboard-preview.png" alt="MoodMark Dashboard Preview" class="hero-image animate delay-3">
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>About MoodMark</h2>
+                <p>
+                    Understand how your online activities affect your emotional wellbeing. MoodMark helps you become more mindful of your digital experiences.
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Emotional Awareness</h3>
+                    <p>
+                        Gain insights into how different websites and online activities affect your mood and emotional state.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Track Patterns</h3>
+                    <p>
+                        Identify patterns in your emotional responses to different types of content and online interactions.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Privacy-First</h3>
+                    <p>
+                        Your data stays on your device by default. No tracking, no external data sharing, fully transparent.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Key Features</h2>
+                <p>
+                    MoodMark combines multiple data sources to create a comprehensive emotional profile of your browsing experience.
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Sentiment Tracking</h3>
+                    <p>
+                        Analyze your text inputs (comments, messages, forms) for emotional sentiment to understand your reactions.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3>Typing Behavior Monitor</h3>
+                    <p>
+                        Track typing speed, pauses, and rhythm to infer mood states from your interaction patterns.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>URL Context</h3>
+                    <p>
+                        Log visited URLs with mood snapshots to identify which websites affect your emotional state.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Mood Dashboard</h3>
+                    <p>
+                        Visualize your emotional trends over time, top emotional triggers, and mood patterns.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Local-first Storage</h3>
+                    <p>
+                        All data stored locally with export/import options for complete control over your information.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <h3>Manual Mood Tagging</h3>
+                    <p>
+                        Manually tag your mood at any time to supplement automatic detection and improve accuracy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="installation" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Installation Guide</h2>
+                <p>
+                    Follow these steps to install the MoodMark browser extension on your Chrome browser.
+                </p>
+            </div>
+            <div class="installation-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Clone the Repository</h3>
+                        <p>Start by cloning the GitHub repository to your local machine.</p>
+                        <code>git clone https://github.com/chirag127/MoodMark.git</code>
+                        <code>cd MoodMark</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Open Chrome Extensions Page</h3>
+                        <p>Navigate to Chrome's extensions management page.</p>
+                        <code>chrome://extensions/</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Enable Developer Mode</h3>
+                        <p>Toggle on the "Developer mode" switch in the top-right corner of the extensions page.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Load the Extension</h3>
+                        <p>Click the "Load unpacked" button and select the <code>extension</code> folder from the cloned repository.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3>Verify Installation</h3>
+                        <p>The MoodMark extension should now appear in your extensions list and be ready to use.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="usage" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>How to Use</h2>
+                <p>
+                    MoodMark works passively in the background, but you can also interact with it directly.
+                </p>
+            </div>
+            <div class="usage-container">
+                <ol class="usage-list">
+                    <li><strong>Access the Dashboard:</strong> Click the MoodMark icon in your browser toolbar to open the dashboard.</li>
+                    <li><strong>Browse Normally:</strong> MoodMark will passively track your emotional state as you browse the web.</li>
+                    <li><strong>View Current Mood:</strong> Check the "Current Mood" tab to see your emotional state for the current website.</li>
+                    <li><strong>Tag Manually:</strong> Use the mood selector in the "Current Mood" tab to manually tag your emotional state.</li>
+                    <li><strong>Explore History:</strong> Visit the "History" tab to see your mood trends over time and by website.</li>
+                    <li><strong>Adjust Settings:</strong> Customize tracking options and privacy settings in the "Settings" tab.</li>
+                    <li><strong>Export/Import Data:</strong> Use the data management options in Settings to backup or transfer your mood data.</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Technology Stack</h2>
+                <p>
+                    MoodMark is built using modern web technologies and APIs.
+                </p>
+            </div>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fab fa-js"></i>
+                    </div>
+                    <p>JavaScript</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fab fa-html5"></i>
+                    </div>
+                    <p>HTML5</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fab fa-css3-alt"></i>
+                    </div>
+                    <p>CSS3</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fab fa-chrome"></i>
+                    </div>
+                    <p>Chrome API</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fab fa-node-js"></i>
+                    </div>
+                    <p>Node.js</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <p>MongoDB</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <p>Chart.js</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <p>NLP</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="extension/assets/icon48.png" alt="MoodMark Logo">
+                    <div class="logo-text">
+                        <h1>MoodMark</h1>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/chirag127/MoodMark" target="_blank">GitHub</a>
+                    <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                    <a href="#about">About</a>
+                    <a href="#features">Features</a>
+                    <a href="#installation">Installation</a>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 MoodMark. All rights reserved. Licensed under MIT.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple animation for elements when they come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.feature-card, .step, .tech-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '0';
+                        entry.target.style.transform = 'translateY(20px)';
+                        
+                        setTimeout(() => {
+                            entry.target.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, 100);
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            animateElements.forEach(element => {
+                element.style.opacity = '0';
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
